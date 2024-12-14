@@ -7,6 +7,14 @@ import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.double
 import com.github.ajalt.clikt.parameters.types.int
+import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
+import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
+import com.github.ajalt.mordant.table.Borders
+import com.github.ajalt.mordant.table.table
 import kotlinx.coroutines.runBlocking
 
 class HistoryCommand(private val service: CurrencyService) : CliktCommand() {
@@ -32,14 +40,28 @@ class HistoryCommand(private val service: CurrencyService) : CliktCommand() {
             echo("Fetching history for $from -> $to over the past $days days...")
             try {
                 val history = service.getCurrencyHistory(from!!.lowercase(), to!!.lowercase(), days!!, amount)
-                if (history.isEmpty()) {
-                    echo("No historical rates found for the given range.")
-                } else {
-                    echo("Currency history (from most recent):")
-                    history.forEach { (date, rate) ->
-                        echo("${amount ?: 1} ${from!!.uppercase()} = $rate ${to!!.uppercase()} on $date")
+
+                val table = table {
+                    borderType = SQUARE_DOUBLE_SECTION_SEPARATOR
+                    borderStyle = rgb("#4b25b9")
+                    align = TextAlign.CENTER
+                    tableBorders = Borders.ALL
+                    header {
+                        style = TextColors.brightRed + TextStyles.bold
+                        row("Currency", "Exchange", "Rate", "Date") { cellBorders = Borders.BOTTOM }
+                    }
+                    body {
+                        style = TextColors.green
+                        rowStyles(TextStyle(), TextStyles.dim.style)
+
+                        cellBorders = Borders.ALL
+                        history.forEach { (date, rate) ->
+                            row(from, to, rate, date)
+                        }
                     }
                 }
+
+                echo(table)
             } catch (e: Exception) {
                 echo("Error while fetching history: ${e.message}")
             }

@@ -7,13 +7,18 @@ import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.double
+import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
+import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles
-import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.table.Borders
+import com.github.ajalt.mordant.table.table
 import kotlinx.coroutines.runBlocking
 
 class ConvertCommand(private val service: CurrencyService) : CliktCommand() {
     private val currencies = runBlocking { service.getCurrencies() }
-    private val terminal = Terminal()
 
     private val currency by option("-c", "--currency", help = "Currency to convert from")
     private val exchanges: List<String>? by option("-e", "--exchange", help = "Currency to convert to")
@@ -38,16 +43,29 @@ class ConvertCommand(private val service: CurrencyService) : CliktCommand() {
             return
         }
 
-        runBlocking {
-            exchanges!!.forEach { exchange ->
-                val convertedAmount = service.convertCurrency(amount!!, currency!!.lowercase(), exchange.lowercase())
+        val table = table {
+            borderType = SQUARE_DOUBLE_SECTION_SEPARATOR
+            borderStyle = rgb("#4b25b9")
+            align = TextAlign.CENTER
+            tableBorders = Borders.ALL
+            header {
+                style = TextColors.brightRed + TextStyles.bold
+                row("Currency", "Exchange", "Rate") { cellBorders = Borders.BOTTOM }
+            }
+            body {
+                style = TextColors.green
+                rowStyles(TextStyle(), TextStyles.dim.style)
 
-                terminal.print(TextStyles.bold("$amount"))
-                terminal.print(" ${currency!!.uppercase()} = ")
-                terminal.print(TextStyles.bold("$convertedAmount"))
-                terminal.print(TextStyles.bold(" ${exchange.uppercase()}"))
-                terminal.println()
+                cellBorders = Borders.ALL
+                exchanges!!.forEach { exchange ->
+                    val convertedAmount = runBlocking {
+                        service.convertCurrency(amount!!, currency!!.lowercase(), exchange.lowercase())
+                    }
+
+                    row(currency, exchange, convertedAmount)
+                }
             }
         }
+        echo(table)
     }
 }
