@@ -1,36 +1,88 @@
 # Exchange CLI
 
-A simple and powerful command-line tool to check real-time currency exchange rates directly from the terminal. Currency
-Exchange CLI lets you stay updated with the latest exchange rates, with support for multiple base currencies and
-interactive commands.
+A **simple**, **powerful**, and **interactive** command-line tool to check real-time currency exchange rates directly from your terminal. With Exchange CLI, you can effortlessly retrieve the latest exchange rates, convert between multiple currencies, and enjoy a responsive and user-friendly interface.
 
-## Features
+## Features 🚀
 
-- **Real-Time Currency Rates:**
-    - Retrieve exchange rates for a selected base currency (default is USD).
-    - Supports various currencies like EUR, GBP, JPY, CNY, and more.
-    - Easily switch between base currencies.
+- **Real-Time Currency Exchange Rates**:
+    - Retrieve exchange rates quickly for a selected base currency (default is `USD`).
+    - Supports a wide range of currencies, including `EUR`, `GBP`, `JPY`, `CNY`, and more.
+    - Easily switch between base currencies for custom requirements.
 
-- **Interactive CLI Interface:**
-    - Clear, colorful commands and output for a smooth user experience
-      using [Kotter](https://github.com/varabyte/kotter).
-    - Display exchange rates in a human-readable format.
+- **Interactive CLI Interface**:
+    - Built with [Clikt](https://github.com/ajalt/clikt) for intuitive and easy-to-use command-line interactions.
+    - Leverages [Kotter](https://github.com/varabyte/kotter) to display commands and outputs in a clean, colorful, and human-readable format.
 
-## Installation
+- **Currency Conversion**:
+    - Perform real-time conversions with multiple currencies.
+    - Allows precise input of amounts, supports batch conversions, and displays results with enhanced formatting.
 
-1. Clone this repository:
-    ```bash
-    git clone https://github.com/adriianh/currency-exchange-cli.git
-    cd currency-exchange-cli
-    ```
+- **Multiplatform Support**:
+    - Compatible with Windows, macOS, and Linux systems.
 
-2. Set up the environment:
-   Ensure you have Kotlin and Gradle installed on your system. Then, build the project:
-    ```bash
-    ./gradlew build
-    ```
+## Installation ⚙️
 
-3. Run the application:
-    ```bash
-    ./gradlew run
-    ```
+1. **Clone this repository**:
+   ```bash
+   git clone https://github.com/adriianh/currency-exchange-cli.git
+   cd currency-exchange-cli
+   ```
+
+2. **Set up the environment**:
+   Ensure **Kotlin** (v1.9 or higher) and **Gradle** are installed on your system. Then, build the project:
+   ```bash
+   ./gradlew installDist
+   ```
+
+3. **Navigate to the build directory**:
+   ```bash
+   cd ./dist/bin
+   ```
+
+4. **Run the application**:
+   ```bash
+   ./app
+   ```
+
+## Usage 🛠️
+
+After installation, you can execute various commands to fetch exchange rates or perform currency conversions. Here are a few examples:
+
+1. **Display help**: Shows a list of available commands and options.
+
+   ```bash
+   ./app --help
+   ```
+
+2. **Fetch currency rates**: Fetches the latest exchange rates for a specific base currency.
+   ```bash
+   ./app fetch -c USD
+   ```
+   Displays current exchange rates using `USD` as the base currency.
+
+3. **Convert currencies interactively**:
+   Launch the interactive conversion mode:
+   ```bash
+   ./app convert
+   ```
+
+4. **Direct conversion**:
+   To convert between specific currencies, run:
+   ```bash
+   ./app convert -a 100 -c USD -e EUR,GBP
+   ```
+   Converts `100 USD` to `EUR` and `GBP`.
+
+## Contributing 🤝
+
+Contributions are welcome! Feel free to fork the repository, make changes, and submit a pull request. For major changes, please open an issue first to discuss what you'd like to implement.
+
+## License 📜
+
+This project is licensed under the [MIT License](./LICENSE).
+
+## Acknowledgments 🙌
+
+Special thanks to the authors of:
+- [Clikt](https://github.com/ajalt/clikt): Simplifying CLI command-handling in Kotlin.
+- [Kotter](https://github.com/varabyte/kotter): Crafting user-friendly, colorful terminal UIs.
