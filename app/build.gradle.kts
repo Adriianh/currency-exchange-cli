@@ -54,6 +54,10 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 
+    installDist {
+        destinationDir = file("$rootDir/dist")
+    }
+
     build {
         dependsOn(jar)
     }
