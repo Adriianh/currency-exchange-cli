@@ -24,7 +24,7 @@ class ConvertCommand(private val service: CurrencyService) : CliktCommand() {
 
     override fun run() {
         if (currencies.isEmpty()) {
-            println("No currencies available to select.")
+            echo("No currencies available to select.")
             return
         }
 
@@ -34,7 +34,7 @@ class ConvertCommand(private val service: CurrencyService) : CliktCommand() {
         }
 
         if (currency!!.isBlank() || exchanges!!.isEmpty() || amount!!.isNaN()) {
-            println("Currency codes and amount cannot be empty")
+            echo("Currency codes and amount cannot be empty")
             return
         }
 
