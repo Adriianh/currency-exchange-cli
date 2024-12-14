@@ -14,10 +14,12 @@ repositories {
 dependencies {
     implementation(libs.guava)
 
+    /* Clikt */
+    implementation("com.github.ajalt.clikt:clikt:3.3.0")
     implementation("com.github.ajalt.clikt:clikt-markdown:5.0.1") /* Optional */
 
     /* Kotter */
-    implementation("com.varabyte.kotter:kotter-jvm:1.2.0")
+    implementation("com.varabyte.kotter:kotter-jvm:1.2.1")
 
     /* OkHttp3 */
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
@@ -36,4 +38,23 @@ java {
 
 application {
     mainClass = "com.github.adriianh.app.AppKt"
+}
+
+tasks {
+    withType<Jar> {
+        archiveBaseName.set("exchange")
+        destinationDirectory.set(file("$rootDir/bin"))
+
+        manifest {
+            attributes["Main-Class"] = "com.github.adriianh.app.AppKt"
+        }
+        configurations["compileClasspath"].forEach { file: File ->
+            from(zipTree(file.absoluteFile))
+        }
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+
+    build {
+        dependsOn(jar)
+    }
 }
