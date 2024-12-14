@@ -1,10 +1,12 @@
 package com.github.adriianh.command
 
+import com.github.adriianh.command.component.fromPicker
 import com.github.adriianh.command.dynamic.fetchCurrency
 import com.github.adriianh.service.CurrencyService
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.terminal
+import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.varabyte.kotter.foundation.input.Keys
 import com.varabyte.kotter.foundation.input.onKeyPressed
@@ -20,22 +22,42 @@ import kotlin.math.min
 
 class FetchCommand(private val service: CurrencyService) : CliktCommand() {
     private val currency by option("-c", "--currency", help = "Currency to fetch")
+    private val list by option("-l", "--list", help = "List all available currencies")
+        .flag(default = false)
 
     override fun help(context: Context): String = "Fetches the latest currency exchange rates from the internet."
 
     override fun run() {
-        if (currency == null) {
+        if (currency == null && !list) {
             fetchCurrency(service, currentContext)
             return
         }
 
-        if (currency!!.isBlank()) {
+        var actualCurrency: String = currency ?: "usd"
+        if (list) {
+            session {
+                val response = runBlocking { service.getCurrencies() }
+                val entries = response.entries.toList()
+
+                val terminalHeight = terminal.size.height
+                val reservedLines = 10
+                val linesPerPage = terminalHeight - reservedLines
+
+                actualCurrency = fromPicker(
+                    currency = response,
+                    linesPerPage = linesPerPage,
+                    totalPages = (entries.size + linesPerPage - 1) / linesPerPage
+                ).first
+            }
+        }
+
+        if (actualCurrency.isBlank()) {
             echo("Currency code cannot be empty.")
             return
         }
 
-        echo("Fetching currency: $currency")
-        val response = runBlocking { service.getCurrency(currency!!.lowercase()) }
+        echo("Fetching currency: $actualCurrency")
+        val response = runBlocking { service.getCurrency(actualCurrency.lowercase()) }
 
         session {
             val terminalHeight = terminal.size.height
