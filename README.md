@@ -46,6 +46,8 @@ A **simple**, **powerful**, and **interactive** command-line tool to check real-
 
 ## Usage 🛠️
 
+After installation, you can execute various commands to fetch exchange rates or perform currency conversions. Below are the available commands and their usage instructions:
+
 After installation, you can execute various commands to fetch exchange rates or perform currency conversions. Here are a few examples:
 
 1. **Display help**: Shows a list of available commands and options.
@@ -53,12 +55,12 @@ After installation, you can execute various commands to fetch exchange rates or 
    ```bash
    ./app --help
    ```
-
+   Displays all available commands and options in detail.
 2. **Fetch currency rates**: Fetches the latest exchange rates for a specific base currency.
    ```bash
    ./app fetch -c USD
    ```
-   Displays current exchange rates using `USD` as the base currency.
+   Fetches the latest exchange rates using `USD` as the base currency.
 
 3. **Convert currencies interactively**:
    Launch the interactive conversion mode:
@@ -72,6 +74,20 @@ After installation, you can execute various commands to fetch exchange rates or 
    ./app convert -a 100 -c USD -e EUR,GBP
    ```
    Converts `100 USD` to `EUR` and `GBP`.
+
+5. **View historical rates**:
+   Fetch historical exchange rates for a specific date:
+   ```bash
+   ./app history -c USD -d 2023-01-01
+   ```
+   This retrieves exchange rates for `USD` on `2023-01-01`
+6. 
+6. **Fetch and display all supported currencies**:
+   View a list of all supported currencies and their codes:
+   ```bash
+   ./app fetch --list
+   ```
+   Displays a detailed table of all available currency codes.
 
 ## Contributing 🤝
 
