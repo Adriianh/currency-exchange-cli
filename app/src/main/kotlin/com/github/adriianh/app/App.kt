@@ -1,6 +1,7 @@
 package com.github.adriianh.app
 
 import com.github.adriianh.command.ConvertCommand
+import com.github.adriianh.command.FetchCommand
 import com.github.adriianh.network.HttpClient
 import com.github.adriianh.service.CurrencyService
 import com.github.ajalt.clikt.core.CliktCommand
@@ -15,7 +16,8 @@ class Exchange : CliktCommand() {
 
     init {
         subcommands(
-            ConvertCommand(service)
+            ConvertCommand(service),
+            FetchCommand(service)
         )
     }
 }

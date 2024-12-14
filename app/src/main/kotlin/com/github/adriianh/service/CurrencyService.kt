@@ -1,5 +1,6 @@
 package com.github.adriianh.service
 
+import com.github.adriianh.model.CurrencyResponse
 import com.github.adriianh.model.parseRates
 import com.github.adriianh.network.HttpClient
 import com.github.adriianh.network.URLBuilder
@@ -14,6 +15,14 @@ class CurrencyService(private val httpClient: HttpClient) {
         val url = URLBuilder.buildUrl("currencies.json")
         val response = httpClient.get(url.toString())
         return response.parseJson()
+    }
+
+    suspend fun getCurrency(currency: String): CurrencyResponse {
+        val url = URLBuilder.buildUrl("currencies", "$currency.json")
+        val response = httpClient.get(url.toString())
+
+        val currencyResponse = parseRates(response, currency)
+        return currencyResponse
     }
 
     suspend fun convertCurrency(amount: Double, fromCurrency: String, toCurrency: String): Double {
